@@ -50,5 +50,16 @@ describe('api; GET /api', ()=>{
     })
 })
 
-
+describe('Articles', ()=>{
+    describe('GET /api/articles/:article_id', ()=>{
+        test.only('endpoint responds with an data about an article, determined dynamically by the parametric \':article_id\'; sends 200', ()=>{
+            return request(app)
+            .get('/api/articles/1')
+            .expect(200)
+            .then((response)=>{
+                console.log(response.body);
+            })
+        })
+    })
+})
 
