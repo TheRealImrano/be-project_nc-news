@@ -1,35 +1,22 @@
 const express = require("express");
 const { getTopics } = require("./controllers/topicsController");
-const fs = require('fs/promises');
-const { readJsonFile } = require("./utils/jsonReader");
+const { getEndpoints } = require("./controllers/apiController");
 
 
 const app = express();
 app.use(express.json());
 
-app.get('/api', (req, res, next)=>{
-    const filePath = './endpoints.json';
+app.get('/api', getEndpoints);
 
-    readJsonFile(filePath)
-    .then(data => {
-        res.status(200).send(data);
-    })
-    .catch(err => {
-        next(err)
-    });
-});
-
-app.get('/api/topics', getTopics)
+app.get('/api/topics', getTopics);
 
 app.use((err, req, res, next) => {
     if (err.status) {
-        console.log(err.status, ':', err.message);
       res.status(err.status).send({ msg: err.msg });
     } else next(err);
   });
 
 app.use((err, req, res, next) => {
-    console.log('server error');
     console.error(err.stack);
     res.status(500).json({ error: "Internal Server Error" });
 });

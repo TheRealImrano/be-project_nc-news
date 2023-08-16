@@ -3,7 +3,7 @@ const seed = require('../db/seeds/seed.js');
 const data = require("../db/data/test-data");
 const db = require('../db/connection.js');
 const app = require('../app.js');
-const { readJsonFile } = require('../utils/jsonReader.js');
+const fs = require('fs/promises');
 
 beforeEach(() => {
     return seed(data);
@@ -39,11 +39,13 @@ describe('api; GET /api', ()=>{
         .expect(200)
         .then((response)=>{
             const filePath = './endpoints.json';
-            readJsonFile(filePath)
-            .then(result => {
-                expect(response.body).toEqual(result);
-            })
-            // expect(response.body).toEqual(readJsonFile(filePath));
+            return fs.readFile(filePath, 'utf-8')
+                .then(jsonData => {
+                    return JSON.parse(jsonData)
+                })
+                .then((result)=>{
+                    expect(response.body).toEqual(result);
+                })
         })
     })
 })
