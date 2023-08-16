@@ -33,7 +33,7 @@ describe('topics', ()=>{
 })
 
 describe('api; GET /api', ()=>{
-    test.only('endpoint GET /api responds with information about the api, and how to use it', ()=>{
+    test('endpoint GET /api responds with information about the api, and how to use it', ()=>{
         return request(app)
         .get('/api')
         .expect(200)
