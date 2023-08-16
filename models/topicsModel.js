@@ -8,5 +8,5 @@ exports.fetchTopics = () => {
     )
     .then((result)=>{
         return result;
-    })
+    });
 }
