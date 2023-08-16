@@ -1,13 +1,14 @@
 const express = require("express");
 const { getTopics } = require("./controllers/topicsController");
 const fs = require('fs/promises');
+const { readJsonFile } = require("./utils/jsonReader");
 
 
 const app = express();
 app.use(express.json());
 
 app.get('/api', ()=>{
-    
+    readJsonFile()
 })
 
 app.get('/api/topics', getTopics)

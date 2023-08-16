@@ -1,6 +1,6 @@
 const fs = require('fs/promises');
 
-function readJsonFile() {
+exports.readJsonFile = () => {
     return fs.readFile('./endpoints.json', 'utf-8')
         .then(jsonData => JSON.parse(jsonData))
         .catch(error => {
