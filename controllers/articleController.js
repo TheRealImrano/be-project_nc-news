@@ -1,5 +1,7 @@
 const { fetchArticles } = require("../models/articleModel");
 
 exports.getArticles = (req, res, next) => {
-    console.log(req.params);
+    const {article_id} = req.params;
+
+    fetchArticles(article_id)
 }
