@@ -1,10 +1,12 @@
 const fs = require('fs/promises');
 
-exports.readJsonFile = () => {
-    return fs.readFile('./endpoints.json', 'utf-8')
+exports.readJsonFile = (filePath) => {
+    return fs.readFile(filePath, 'utf-8')
         .then(jsonData => JSON.parse(jsonData))
-        .catch(error => {
-            console.error('Error reading JSON file:', error);
-            throw error;
+        .catch(err => {
+            return Promise.reject({
+                status: 500,
+                message: 'Error reading JSON file',
+            });
         });
 }
