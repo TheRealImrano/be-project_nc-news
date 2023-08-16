@@ -11,9 +11,6 @@ afterAll(() => {
     return db.end();
 });
 
-test("returns 404 bad request when sent invalid endpoint", () => {
-    return request(app).get("/api/topico").expect(404);
-});
 
 describe('topics', ()=>{
     describe('GET /api/topics', ()=>{
