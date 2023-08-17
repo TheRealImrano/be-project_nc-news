@@ -72,8 +72,8 @@ describe('Articles', ()=>{
             .get('/api/articles/one')
             .expect(400)
             .then((response) => {
-                expect(response.body.msg).toBe("bad request - invalid SQL");
-                expect(response.body.code).toBe('22P02');
+                expect(response.body.msg).toBe("Bad Request");
+                expect(response.body.code).toBe(400);
             });
         })
         test('returns 404; \'not found\' when passed a valid article_id that doesn\'t exist in the database', ()=>{
