@@ -5,7 +5,7 @@ exports.getArticles = (req, res, next) => {
 
     fetchArticles(article_id)
     .then((data)=>{
-        res.status(200).send({article: data.rows[0]});
+        res.status(200).send({article: data});
     })
     .catch((err) => {
         next(err);
