@@ -22,20 +22,36 @@ exports.fetchAllArticles = () => {
     // since there is no query or parametric input from the client, there, in theory, cant be any client errors, but error handling chain should still take care of 500s (i.e we code wrong)
     // update endpoints.json once complete
 
+    console.log('here again');
+
     return db.query(`
     SELECT
-    articles.*,
-    COUNT(comments.comment_id) AS comment_count
-FROM
-    articles
-LEFT JOIN
-    comments ON articles.article_id = comments.article_id
-GROUP BY
-    articles.article_id
-ORDER BY
-    articles.date_column DESC;
+        articles.author,
+        articles.title,
+        articles.article_id,
+        articles.topic,
+        articles.created_at,
+        articles.votes,
+        articles.article_img_url,
+        COUNT(comments.comment_id) AS comment_count
+    FROM
+        articles
+    LEFT JOIN
+        comments ON articles.article_id = comments.article_id
+    GROUP BY
+        articles.author,
+        articles.title,
+        articles.article_id,
+        articles.topic,
+        articles.created_at,
+        articles.votes,
+        articles.article_img_url
+    ORDER BY
+        articles.created_at DESC;
     `)
     .then(data=>{
-        console.log(data);
+        console.log('here toooo!');
+        // console.log(data.rows);
+        return data.rows;
     })
 }
