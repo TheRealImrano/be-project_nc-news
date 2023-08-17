@@ -50,5 +50,40 @@ describe('api; GET /api', ()=>{
     })
 })
 
+describe('Articles', ()=>{
+    describe('GET /api/articles/:article_id', ()=>{
+        test('endpoint responds with an data about an article, determined dynamically by the parametric \':article_id\'; sends 200', ()=>{
+            return request(app)
+            .get('/api/articles/1')
+            .expect(200)
+            .then((response)=>{
+                const {article} = response.body;
+                const expectedProperties = ['article_id', 'title', 'topic', 'author', 'body', 'created_at', 'votes', 'article_img_url'];
 
+                expect(Object.keys(article)).toHaveLength(8)
+                expectedProperties.forEach((property)=>{
+                    expect(article).toHaveProperty(property);
+                })
+
+            })
+        })
+        test('returns 400; \'bad request - invalid data format\', when passed a parametric value that is not an integer', ()=>{
+            return request(app)
+            .get('/api/articles/one')
+            .expect(400)
+            .then((response) => {
+                expect(response.body.msg).toBe("Bad Request");
+                expect(response.body.code).toBe(400);
+            });
+        })
+        test('returns 404; \'not found\' when passed a valid article_id that doesn\'t exist in the database', ()=>{
+            return request(app)
+            .get('/api/articles/2023')
+            .expect(404)
+            .then((response) => {
+                expect(response.body.msg).toBe("Not Found")
+            });
+        })
+    })
+})
 
