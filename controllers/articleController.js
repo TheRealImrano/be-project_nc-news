@@ -13,10 +13,11 @@ exports.getArticles = (req, res, next) => {
 }
 
 exports.getAllArticles = (req, res, next) => {
-    console.log('here');
     fetchAllArticles()
 .then(data=>{
-    console.log(data);
-    res.status(200).send(data);
+    res.status(200).send({articles: data});
+})
+.catch((err)=>{
+    next(err);
 })
 }

@@ -86,13 +86,40 @@ describe('Articles', ()=>{
             });
         })
     })
-    describe('GET /api/articles', ()=>{
-        test.only('endpoint responds with data about all articles, save for body, as well as a comment count, and ordered by date in descending order', ()=>{
+    describe.only('GET /api/articles', ()=>{
+        test('endpoint responds with data about all articles, save for body, as well as a comment count', ()=>{
             return request(app)
             .get('/api/articles')
             .expect(200)
             .then((response)=>{
-                // console.log(response.body);
+                const {articles} = response.body;
+                const expectedProperties = ['article_id', 'title', 'topic', 'author', 'comment_count', 'created_at', 'votes', 'article_img_url'];
+
+                expect(articles).toHaveLength(13);
+                articles.forEach((article)=>{
+                    expect(Object.keys(article)).toHaveLength(8);
+                    expect(article).not.toHaveProperty('body')
+                    expectedProperties.forEach((property)=>{
+                        expect(article).toHaveProperty(property);
+                    })
+                })
+            })
+        })
+        test('data returned from endpoint has articles listed by date in descending order', ()=>{
+            return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then((response)=>{
+                const {articles} = response.body;
+
+                for (let i = 0; i < articles.length - 1; i++) {
+                    const currentArticleDate = new Date(articles[i].created_at);
+                    const nextArticleDate = new Date(articles[i + 1].created_at);
+                    const isDescendingDate = currentArticleDate >= nextArticleDate;
+                  
+                    expect(isDescendingDate).toBe(true);
+                  }
+                  
             })
         })
     })

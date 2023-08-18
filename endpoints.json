@@ -25,5 +25,12 @@
         }
       ]
     }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "serves an article object from the database, corresponding to the :article_id given by the client",
+    "queries": [],
+    "exampleResponse": {
+      
+    }
   }
 }
