@@ -50,7 +50,6 @@ describe('api; GET /api', ()=>{
     })
 })
 
-
 describe('Articles', ()=>{
     describe('GET /api/articles/:article_id', ()=>{
         test('endpoint responds with an data about an article, determined dynamically by the parametric \':article_id\'; sends 200', ()=>{
@@ -111,6 +110,7 @@ describe('Articles', ()=>{
             .expect(200)
             .then((response)=>{
                 const {articles} = response.body;
+})
 
                 expect(articles).toBeSortedBy('created_at', {
                     descending: true,
@@ -118,4 +118,4 @@ describe('Articles', ()=>{
             })
         })
     })
-})
+
