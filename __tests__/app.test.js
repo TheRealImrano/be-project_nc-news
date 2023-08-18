@@ -112,14 +112,9 @@ describe('Articles', ()=>{
             .then((response)=>{
                 const {articles} = response.body;
 
-                for (let i = 0; i < articles.length - 1; i++) {
-                    const currentArticleDate = new Date(articles[i].created_at);
-                    const nextArticleDate = new Date(articles[i + 1].created_at);
-                    const isDescendingDate = currentArticleDate >= nextArticleDate;
-                  
-                    expect(isDescendingDate).toBe(true);
-                  }
-                  
+                expect(articles).toBeSortedBy('created_at', {
+                    descending: true,
+                })
             })
         })
     })

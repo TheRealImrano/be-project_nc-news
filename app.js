@@ -5,7 +5,6 @@ const { getAllArticles } = require("./controllers/articleController");
 
 
 const app = express();
-app.use(express.json());
 
 app.get('/api', getEndpoints);
 
