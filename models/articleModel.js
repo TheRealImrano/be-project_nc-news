@@ -17,12 +17,6 @@ exports.fetchArticles = (article_id) => {
 }
 
 exports.fetchAllArticles = () => {
-    // use a sophisticated query to return the article table, excluding body column, and featuring a column_count column, using Count() aggregate function and Group By
-    // once query returns, proceed as normally, passing it back to the controller, sending back a response and handling any errors
-    // since there is no query or parametric input from the client, there, in theory, cant be any client errors, but error handling chain should still take care of 500s (i.e we code wrong)
-    // update endpoints.json once complete
-
-   
 
     return db.query(`
     SELECT
@@ -50,7 +44,6 @@ exports.fetchAllArticles = () => {
         articles.created_at DESC;
     `)
     .then(data=>{
-        // console.log(data.rows);
         return data.rows;
     })
 }
