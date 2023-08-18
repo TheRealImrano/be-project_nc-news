@@ -110,7 +110,6 @@ describe('Articles', ()=>{
             .expect(200)
             .then((response)=>{
                 const {articles} = response.body;
-})
 
                 expect(articles).toBeSortedBy('created_at', {
                     descending: true,
@@ -118,4 +117,4 @@ describe('Articles', ()=>{
             })
         })
     })
-
+})
