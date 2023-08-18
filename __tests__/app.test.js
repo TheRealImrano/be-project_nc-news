@@ -85,7 +85,7 @@ describe('Articles', ()=>{
             });
         })
     })
-    describe.only('GET /api/articles', ()=>{
+    describe('GET /api/articles', ()=>{
         test('endpoint responds with data about all articles, save for body, as well as a comment count', ()=>{
             return request(app)
             .get('/api/articles')
