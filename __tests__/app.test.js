@@ -118,7 +118,7 @@ describe('Articles', ()=>{
             })
         })
     })
-    describe.only('GET /api/articles/:article_id/comments', ()=>{
+    describe('GET /api/articles/:article_id/comments', ()=>{
         test('endpoint responds with an array of comments for the given article_id, where comments should be served with the most recent comments first', ()=>{
             return request(app)
             .get('/api/articles/3/comments')
