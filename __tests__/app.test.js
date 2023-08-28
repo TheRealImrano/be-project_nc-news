@@ -21,7 +21,6 @@ describe('topics', ()=>{
                 .expect(200)
                 .then((response)=>{
                     const {topics} = response.body;
-                    console.log(topics);
                     expect(typeof topics).toBe('object');
                     expect(topics).toHaveLength(3);
                     topics.forEach(topic => {
@@ -119,7 +118,7 @@ describe('Articles', ()=>{
         })
     })
     describe('GET /api/articles/:article_id/comments', ()=>{
-        test('endpoint responds with an array of comments for the given article_id, where comments should be served with the most recent comments first', ()=>{
+        test.only('endpoint responds with an array of comments for the given article_id, where comments should be served with the most recent comments first', ()=>{
             return request(app)
             .get('/api/articles/3/comments')
             .expect(200)
