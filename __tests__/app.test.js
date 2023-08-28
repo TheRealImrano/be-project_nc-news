@@ -118,4 +118,43 @@ describe('Articles', ()=>{
             })
         })
     })
+    describe.only('GET /api/articles/:article_id/comments', ()=>{
+        test('endpoint responds with an array of comments for the given article_id, where comments should be served with the most recent comments first', ()=>{
+            return request(app)
+            .get('/api/articles/3/comments')
+            .expect(200)
+            .then((response)=>{
+                const {comments} = response.body;
+                const expectedProperties = ['comment_id', 'votes', 'created_at', 'author', 'body', 'article_id']
+
+                comments.forEach((comment)=>{
+                    expect(Object.keys(comment)).toHaveLength(6);
+                    expectedProperties.forEach((property)=>{
+                        expect(comment).toHaveProperty(property);
+                    })
+                })
+
+                expect(comments).toBeSortedBy('created_at', {
+                    descending: true,
+                })
+            })
+        })
+        test('returns 400; \'bad request - invalid data format\', when passed a parametric value that is not an integer', ()=>{
+            return request(app)
+            .get('/api/articles/three/comments')
+            .expect(400)
+            .then((response) => {
+                expect(response.body.msg).toBe("Bad Request");
+                expect(response.body.code).toBe(400);
+            });
+        })
+        test('returns 404; \'not found\' when passed a valid article_id that doesn\'t exist in the database', ()=>{
+            return request(app)
+            .get('/api/articles/2023/comments')
+            .expect(404)
+            .then((response) => {
+                expect(response.body.msg).toBe("Not Found")
+            });
+        })
+    })
 })

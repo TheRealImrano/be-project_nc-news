@@ -47,3 +47,23 @@ exports.fetchAllArticles = () => {
         return data.rows;
     })
 }
+
+exports.fetchCommentsById = (article_id) => {
+    const values = [article_id];
+
+    return db.query(`
+        SELECT *
+        FROM comments
+        WHERE article_id = $1
+        ORDER BY created_at DESC;    
+    `, values)
+    .then(data=>{
+        if (data.rowCount === 0) {
+            return Promise.reject({
+              status: 404,
+              msg: "Not Found",
+            });
+        }
+        return data.rows;
+    })
+}
