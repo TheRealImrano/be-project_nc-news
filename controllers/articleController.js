@@ -1,4 +1,4 @@
-const { fetchArticles, fetchAllArticles, fetchCommentsById } = require("../models/articleModel");
+const { fetchArticles, fetchAllArticles, fetchCommentsById, createComment } = require("../models/articleModel");
 
 exports.getArticles = (req, res, next) => {
     const {article_id} = req.params;
@@ -33,4 +33,17 @@ exports.getCommentsById = (req, res, next) => {
         next(err);
     })
 
+}
+
+exports.postComment = (req, res, next) => {
+    const {article_id} = req.params;
+    const body = req.body;
+
+    createComment(article_id, body)
+    .then(data=>{
+        res.status(201).send({comment: data});
+    })
+    .catch((err)=>{
+        next(err);
+    })
 }

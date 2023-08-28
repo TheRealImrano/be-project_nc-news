@@ -1,10 +1,10 @@
 const db = require('../db/connection.js');
 
-exports.fetchArticles = (article_id) => {
+exports.fetchArticles = (id) => {
     return db.query(`
         SELECT * FROM articles
         WHERE article_id = $1;
-    `, [article_id])
+    `, [id])
     .then((data)=>{
         if (data.rowCount === 0) {
             return Promise.reject({
@@ -48,8 +48,8 @@ exports.fetchAllArticles = () => {
     })
 }
 
-exports.fetchCommentsById = (article_id) => {
-    const values = [article_id];
+exports.fetchCommentsById = (id) => {
+    const values = [id];
 
     return db.query(`
         SELECT *
@@ -65,5 +65,23 @@ exports.fetchCommentsById = (article_id) => {
             });
         }
         return data.rows;
+    })
+}
+
+exports.createComment = (id, request) => {
+    if (request.body === undefined || request.username === undefined || Object.keys(request).length !== 2){
+        return Promise.reject({
+            status: 400,
+            msg: "bad request - malformed body",
+          });
+    }
+
+    return db.query(`
+        INSERT INTO comments (author, article_id, body)
+        VALUES ($1, $2, $3)
+        RETURNING *;   
+    `, [request.username, id, request.body])
+    .then(data=>{
+        return data.rows[0]
     })
 }
