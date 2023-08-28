@@ -21,6 +21,7 @@ describe('topics', ()=>{
                 .expect(200)
                 .then((response)=>{
                     const {topics} = response.body;
+                    console.log(topics);
                     expect(typeof topics).toBe('object');
                     expect(topics).toHaveLength(3);
                     topics.forEach(topic => {
