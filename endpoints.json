@@ -1,4 +1,10 @@
 {
+  "Index": {
+    "description": "a brief description of the purpose and functionality of the endpoint.",
+    "queries": "which queries are accepted.",
+    "exampleResponse": "what an example response looks like.",
+    "requestProtocol": "what format the request body needs to adhere to."
+  },
   "GET /api": {
     "description": "serves up a json representation of all the available endpoints of the api"
   },
@@ -41,5 +47,10 @@
           "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
         }
     }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "",
+    "queries": [],
+    "exampleResponse": {}
   }
 }
