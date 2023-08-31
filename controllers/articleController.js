@@ -1,4 +1,4 @@
-const { fetchArticles, fetchAllArticles, fetchCommentsById, createComment } = require("../models/articleModel");
+const { fetchArticles, fetchAllArticles, fetchCommentsById, createComment, updateArticle } = require("../models/articleModel");
 
 exports.getArticles = (req, res, next) => {
     const {article_id} = req.params;
@@ -42,6 +42,19 @@ exports.postComment = (req, res, next) => {
     createComment(article_id, body)
     .then(data=>{
         res.status(201).send({comment: data});
+    })
+    .catch((err)=>{
+        next(err);
+    })
+}
+
+exports.patchArticle = (req, res, next) => {
+    const {article_id} = req.params;
+    const voteCount = req.body;
+
+    updateArticle(article_id, voteCount)
+    .then(data=>{
+        res.status(201).send({article: data});
     })
     .catch((err)=>{
         next(err);

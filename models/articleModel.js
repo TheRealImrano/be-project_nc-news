@@ -85,3 +85,33 @@ exports.createComment = (id, request) => {
         return data.rows[0]
     })
 }
+
+exports.updateArticle = (id, request) => {
+    if (request.inc_votes === undefined || Object.keys(request).length !== 1 || typeof request.inc_votes !== 'number'){
+        return Promise.reject({
+            status: 400,
+            msg: "bad request - malformed body",
+          });
+    }
+
+    return db.query(`
+        SELECT votes FROM articles
+        WHERE article_id = $1;
+    `, [id])
+    .then((data)=>{
+        const voteCount = data.rows[0].votes;
+        const updatedVotes = request.inc_votes + voteCount;
+        return db.query(`
+            UPDATE articles
+            SET votes = $1
+            WHERE article_id = $2
+            RETURNING *;
+        `, [updatedVotes, id])
+    })
+    .then((data)=>{
+        return data.rows[0];
+    })
+}
+
+// do a SELECT query to obtain current vote count, storing that value
+// update the value of votes by taking the sum of our obtained value and provided value

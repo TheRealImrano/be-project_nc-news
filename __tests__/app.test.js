@@ -201,7 +201,7 @@ describe('Articles', ()=>{
             }
 
             return request(app)
-            .post('/api/articles/three/comments')
+            .post('/api/articles/3/comments')
             .send(reqBody)
             .expect(400)
             .then((response) => {
@@ -215,7 +215,72 @@ describe('Articles', ()=>{
             }
 
             return request(app)
-            .post('/api/articles/three/comments')
+            .post('/api/articles/3/comments')
+            .send(reqBody)
+            .expect(400)
+            .then((response) => {
+                expect(response.body.msg).toBe("bad request - malformed body")
+            });
+        })
+    })
+    describe('PATCH /api/articles/:article_id', ()=>{
+        test('endpoint responds with the successfully updated article with a new votes, when provided a correct request body and correct parametric endpoint value', ()=>{
+            const reqBody = {
+                inc_votes : 5
+            }
+            let currentVotes = 0;
+
+            return request(app)
+            .patch('/api/articles/1')
+            .send(reqBody)
+            .expect(201)
+            .then(response=>{
+                const {article} = response.body;
+                const {votes} = article;
+                currentVotes = votes;
+
+                const expectedProperties = ['article_id', 'title', 'topic', 'author', 'created_at', 'votes', 'article_img_url', 'body'];
+
+                expect(Object.keys(article)).toHaveLength(8);
+                expectedProperties.forEach((property)=>{
+                    expect(article).toHaveProperty(property);
+                })
+                return response;
+            })
+            .then((res)=>{
+                return request(app)
+                .patch('/api/articles/1')
+                .send(reqBody)
+                .expect(201)
+                .then(response=>{
+                    const newVotes = response.body.article.votes;
+                    const {inc_votes} = reqBody
+                    
+                    expect(newVotes - currentVotes).toEqual(inc_votes);
+                })
+            })
+        })
+        test('returns 400; \'bad request\', when passed a parametric value that is not an integer', ()=>{
+            const reqBody = {
+                inc_votes : 5
+            }
+
+            return request(app)
+            .patch('/api/articles/three')
+            .send(reqBody)
+            .expect(400)
+            .then((response) => {
+                expect(response.body.msg).toBe("Bad Request");
+                expect(response.body.code).toBe(400);
+            });
+        })
+        test('returns 400; \'bad request - malformed body\', when passed a request body with incorrect formatting (i.e. insufficient/ wrong properties present)', ()=>{
+            const reqBody = {
+                body: 'malformed'
+            }
+
+            return request(app)
+            .patch('/api/articles/1')
             .send(reqBody)
             .expect(400)
             .then((response) => {
