@@ -5,9 +5,11 @@
     "exampleResponse": "what an example response looks like.",
     "requestProtocol": "what format the request body needs to adhere to."
   },
+
   "GET /api": {
     "description": "serves up a json representation of all the available endpoints of the api"
   },
+
   "GET /api/topics": {
     "description": "serves an array of all topics",
     "queries": [],
@@ -15,9 +17,23 @@
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
+
   "GET /api/articles": {
     "description": "serves an array of all articles",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "queries": [
+      {
+        "topic": "filters the articles by the topic value specified in the query. If the query is omitted, the endpoint should respond with all articles",
+        "acceptedValues": "any (if not found, then data returned will be empty)"
+      },
+      {
+        "sort_by": "sorts the articles by any valid column (defaults to date)",
+        "acceptedValues": ["author", "title", "article_id", "topic", "created_at", "votes", "article_img_url", "comment_count"]
+      },
+      {
+        "order": "order by which articles are sorted (defaults to date; varies based on sort_by value) (not case sensitive)",
+        "acceptedValues": ["asc", "desc", "ASC", "DESC"]
+      }
+    ],
     "exampleResponse": {
       "articles": [
         {
@@ -32,6 +48,7 @@
       ]
     }
   },
+
   "GET /api/articles/:article_id": {
     "description": "serves an article object from the database, corresponding to the :article_id given by the client",
     "queries": [],
@@ -48,6 +65,7 @@
         }
     }
   },
+
   "GET /api/articles/:article_id/comments": {
     "description": "endpoint responds with an array of comments for the given article_id, where comments should be served with the most recent comments first",
     "queries": [],
@@ -72,6 +90,7 @@
     ]
   }
   },
+
   "POST /api/articles/:article_id/comments": {
     "description": "endpoint responds with the successfully posted comment when provided a correct request body and correct parametric endpoint value",
     "queries": [],
@@ -90,6 +109,7 @@
       "body": "'testing for comment'"
   }
   },
+
   "PATCH /api/articles/:article_id": {
     "description": "endpoint responds with the successfully updated article with a new votes, when provided a correct request body and correct parametric endpoint value",
     "queries": [],
@@ -109,28 +129,17 @@
       "inc_votes" : 5
   }
   },
+
   "DELETE /api/comments/:comment_id": {
     "description": "endpoint should delete the given comment by comment_id, and return a 204 status code with no content",
     "queries": [],
     "exampleResponse": {},
     "requestProtocol": {}
   },
+
   "GET /api/users": {
     "description": "endpoint responds with an array of User objects; gets all user from database",
-    "queries": [
-      {
-        "topic": "filters the articles by the topic value specified in the query. If the query is omitted, the endpoint should respond with all articles",
-        "acceptedValues": "any (if not found, then data returned will be empty)"
-      },
-      {
-        "sort_by": "sorts the articles by any valid column (defaults to date)",
-        "acceptedValues": ["author", "title", "article_id", "topic", "created_at", "votes", "article_img_url", "comment_count"]
-      },
-      {
-        "order": "order by which articles are sorted (defaults to date; varies based on sort_by value) (not case sensitive)",
-        "acceptedValues": ["asc", "desc", "ASC", "DESC"]
-      }
-    ],
+    "queries": [],
     "exampleResponse": {
       "users": [
         {
