@@ -222,6 +222,20 @@ describe('Articles', ()=>{
                 expect(response.body.msg).toBe("bad request - malformed body")
             });
         })
+        test('returns 400 - bad request when passed a parametric endpoint value that is in the correct format, but doesn\'t exist on the database (i.e. doesn\'t correspond to any actual article or comment)', ()=>{
+            const reqBody = {
+                username: 'icellusedkars',
+                body: 'testing for comment'
+            }
+
+            return request(app)
+            .post('/api/articles/10000/comments')
+            .send(reqBody)
+            .expect(400)
+            .then((response)=>{
+                expect(response.body.msg).toBe("Bad Request")
+            })
+        })
     })
     describe('PATCH /api/articles/:article_id', ()=>{
         test('endpoint responds with the successfully updated article with a new votes, when provided a correct request body and correct parametric endpoint value', ()=>{
@@ -286,6 +300,48 @@ describe('Articles', ()=>{
             .then((response) => {
                 expect(response.body.msg).toBe("bad request - malformed body")
             });
+        })
+        test('returns 404 - Not Found when passed a valid article_id, but one that does not currently exist in database', ()=>{
+            const reqBody = {
+                inc_votes : 5
+            }
+
+            return request(app)
+            .patch('/api/articles/10000')
+            .send(reqBody)
+            .expect(404)
+            .then((response)=>{
+                expect(response.body.msg).toBe("Not Found")
+            })
+        })
+    })
+})
+
+describe('Comments', ()=>{
+    describe('DELETE /api/comments/:comment_id', ()=>{
+        test('endpoint should delete the given comment by comment_id, and return a 204 status code with no content', ()=>{
+            return request(app)
+            .delete('/api/comments/1')
+            .expect(204)
+            .then((response)=>{
+                expect(response.body).toEqual({});
+            })
+        })
+        test('responds with 404 - comment not found, when passed a comment_id in a valid format but does not exist', ()=>{
+            return request(app)
+            .delete('/api/comments/2000000')
+            .expect(404)
+            .then((response)=>{
+                expect(response.body.msg).toBe("comment not found.")
+            })
+        })
+        test('responds with 400 - bad request - malformed body when passed a comment_id that is not an integer', ()=>{
+            return request(app)
+            .delete('/api/comments/two')
+            .expect(400)
+            .then((response)=>{
+                expect(response.body.msg).toBe("bad request - malformed body")
+            })
         })
     })
 })

@@ -104,5 +104,11 @@
     "requestProtocol": {
       "inc_votes" : 5
   }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "endpoint should delete the given comment by comment_id, and return a 204 status code with no content",
+    "queries": [],
+    "exampleResponse": {},
+    "requestProtocol": {}
   }
 }
