@@ -85,7 +85,7 @@ describe('Articles', ()=>{
             });
         })
     })
-    describe.only('GET /api/articles', ()=>{
+    describe('GET /api/articles', ()=>{
         test('endpoint responds with data about all articles, save for body, as well as a comment count', ()=>{
             return request(app)
             .get('/api/articles')
@@ -191,7 +191,7 @@ describe('Articles', ()=>{
                     expect(response.body.msg).toBe("Bad Request");
                 })
             })
-            test.only('endpoint can successfully respond to multiple queries at once', ()=>{
+            test('endpoint can successfully respond to multiple queries at once', ()=>{
                 const query1 = 'mitch'
                 const query2 = 'article_id'
                 const query3 = 'asc';
