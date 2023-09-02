@@ -345,3 +345,24 @@ describe('Comments', ()=>{
         })
     })
 })
+
+describe('Users', ()=>{
+    describe('GET /api/users', ()=>{
+        test('endpoint responds with an array of User objects; gets all user from database', ()=>{
+            return request(app)
+            .get('/api/users')
+            .expect(200)
+            .then((response)=>{
+                const {users} = response.body;
+                const expectedProperties = ['username', 'name', 'avatar_url']
+
+                users.forEach((user)=>{
+                    expect(Object.keys(user)).toHaveLength(3);
+                    expectedProperties.forEach((property)=>{
+                        expect(user).toHaveProperty(property);
+                    })
+                })
+            })
+        })
+    })
+})
