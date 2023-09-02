@@ -117,7 +117,20 @@
   },
   "GET /api/users": {
     "description": "endpoint responds with an array of User objects; gets all user from database",
-    "queries": [],
+    "queries": [
+      {
+        "topic": "filters the articles by the topic value specified in the query. If the query is omitted, the endpoint should respond with all articles",
+        "acceptedValues": "any (if not found, then data returned will be empty)"
+      },
+      {
+        "sort_by": "sorts the articles by any valid column (defaults to date)",
+        "acceptedValues": ["author", "title", "article_id", "topic", "created_at", "votes", "article_img_url", "comment_count"]
+      },
+      {
+        "order": "order by which articles are sorted (defaults to date; varies based on sort_by value) (not case sensitive)",
+        "acceptedValues": ["asc", "desc", "ASC", "DESC"]
+      }
+    ],
     "exampleResponse": {
       "users": [
         {

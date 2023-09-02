@@ -85,7 +85,7 @@ describe('Articles', ()=>{
             });
         })
     })
-    describe('GET /api/articles', ()=>{
+    describe.only('GET /api/articles', ()=>{
         test('endpoint responds with data about all articles, save for body, as well as a comment count', ()=>{
             return request(app)
             .get('/api/articles')
@@ -113,6 +113,104 @@ describe('Articles', ()=>{
 
                 expect(articles).toBeSortedBy('created_at', {
                     descending: true,
+                })
+            })
+        })
+        describe('FEATURE - queries', ()=>{
+            test('topic: endpoint filters articles by the topic value specified in the query. If the query is omitted, the endpoint should respond with all articles.', ()=>{
+                const query = 'cats';
+
+                return request(app)
+                .get(`/api/articles?topic=${query}`)
+                .expect(200)
+                .then((response)=>{
+                    const {articles} = response.body;
+
+                    articles.forEach((article)=>{
+                        expect(article.topic).toBe(query)
+                    })
+                })
+            })
+            test('topic: returns 404 - not found if there are no articles with that topic value', ()=>{
+                const query = 'no%20spaces%20present';
+
+                return request(app)
+                .get(`/api/articles?topic=${query}`)
+                .expect(404)
+                .then((response)=>{
+                    expect(response.body.msg).toBe("Not Found")
+                })
+            })
+            test('sort_by: sorts the response by a specified column name, provided its valid', ()=>{
+                const query = 'article_id';
+
+                return request(app)
+                .get(`/api/articles?sort_by=${query}`)
+                .expect(200)
+                .then((response)=>{
+                    const {articles} = response.body;
+
+                    expect(articles).toBeSortedBy(query, {
+                        descending: true,
+                    })
+                })
+            })
+            test('sort_by: returns 400 - bad request if provided an incorrect sorting criteria', ()=>{
+                const query = 'badQuery';
+
+                return request(app)
+                .get(`/api/articles?sort_by=${query}`)
+                .expect(400)
+                .then((response)=>{
+                    expect(response.body.msg).toBe("Bad Request");
+                })
+            })
+            test('order: orders in either ascending or descending; defaults to descending (asc/desc)', ()=>{
+                const query = 'asc';
+
+                const isDescending = query === 'desc' ? true : false
+
+                return request(app)
+                .get(`/api/articles?order=${query}`)
+                .expect(200)
+                .then((response)=>{
+                    const {articles} = response.body;
+
+                    expect(articles).toBeSortedBy('created_at', {
+                        descending: isDescending,
+                    })
+                })
+            })
+            test('order: returns 400 - bad request if provided an invalid sorting criteria', ()=>{
+                const query = 'upAndDownLol';
+
+                return request(app)
+                .get(`/api/articles?order=${query}`)
+                .expect(400)
+                .then((response)=>{
+                    expect(response.body.msg).toBe("Bad Request");
+                })
+            })
+            test.only('endpoint can successfully respond to multiple queries at once', ()=>{
+                const query1 = 'mitch'
+                const query2 = 'article_id'
+                const query3 = 'asc';
+
+                const isDescending = query3 === 'desc' || query3 === 'DESC' ? true : false
+
+                return request(app)
+                .get(`/api/articles?topic=${query1}&sort_by=${query2}&order=${query3}`)
+                .expect(200)
+                .then((response)=>{
+                    const {articles} = response.body;
+
+                    articles.forEach((article)=>{
+                        expect(article.topic).toBe(query1)
+                    })
+
+                    expect(articles).toBeSortedBy(query2, {
+                        descending: isDescending,
+                    })
                 })
             })
         })

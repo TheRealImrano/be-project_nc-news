@@ -13,7 +13,9 @@ exports.getArticles = (req, res, next) => {
 }
 
 exports.getAllArticles = (req, res, next) => {
-    fetchAllArticles()
+    const queries = req.query;
+
+    fetchAllArticles(queries)
 .then(data=>{
     res.status(200).send({articles: data});
 })
