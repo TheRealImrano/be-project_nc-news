@@ -16,7 +16,27 @@ exports.fetchArticles = (id) => {
     })
 }
 
-exports.fetchAllArticles = () => {
+exports.fetchAllArticles = (queries) => {
+    const {topic, sort_by, order} = queries;
+
+    const decodedTopic = topic ? decodeURIComponent(topic) : undefined;
+
+    const whereClause = decodedTopic ? `WHERE articles.topic = $1` : '';
+
+    const params = [];
+
+    if (decodedTopic) {
+        params.push(decodedTopic);
+    }
+
+    const orderSeq = order ? order : 'DESC';
+    const sorting = sort_by ? sort_by : 'created_at'
+
+    let orderByClause = `ORDER BY articles.created_at DESC`;
+
+    if (sort_by || order){
+        orderByClause = `ORDER BY articles.${sorting} ${orderSeq}`;
+    }
 
     return db.query(`
     SELECT
@@ -32,6 +52,7 @@ exports.fetchAllArticles = () => {
         articles
     LEFT JOIN
         comments ON articles.article_id = comments.article_id
+        ${whereClause}
     GROUP BY
         articles.author,
         articles.title,
@@ -40,10 +61,15 @@ exports.fetchAllArticles = () => {
         articles.created_at,
         articles.votes,
         articles.article_img_url
-    ORDER BY
-        articles.created_at DESC;
-    `)
+    ${orderByClause};
+    `, params)
     .then(data=>{
+        if (data.rows.length === 0) {
+            return Promise.reject({
+              status: 404,
+              msg: "Not Found",
+            });
+        }
         return data.rows;
     })
 }
