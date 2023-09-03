@@ -2,7 +2,9 @@ const db = require('../db/connection.js');
 
 exports.fetchArticles = (id) => {
     return db.query(`
-        SELECT * FROM articles
+        SELECT articles.*,
+            (SELECT COUNT(*) FROM comments WHERE article_id = $1) AS comment_count
+        FROM articles
         WHERE article_id = $1;
     `, [id])
     .then((data)=>{

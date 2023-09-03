@@ -52,15 +52,16 @@ describe('api; GET /api', ()=>{
 
 describe('Articles', ()=>{
     describe('GET /api/articles/:article_id', ()=>{
-        test('endpoint responds with an data about an article, determined dynamically by the parametric \':article_id\'; sends 200', ()=>{
+        test.only('endpoint responds with an data about an article, determined dynamically by the parametric \':article_id\'; sends 200', ()=>{
             return request(app)
             .get('/api/articles/1')
             .expect(200)
             .then((response)=>{
                 const {article} = response.body;
-                const expectedProperties = ['article_id', 'title', 'topic', 'author', 'body', 'created_at', 'votes', 'article_img_url'];
+                console.log(article)
+                const expectedProperties = ['article_id', 'title', 'topic', 'author', 'body', 'created_at', 'votes', 'article_img_url', 'comment_count'];
 
-                expect(Object.keys(article)).toHaveLength(8)
+                expect(Object.keys(article)).toHaveLength(9)
                 expectedProperties.forEach((property)=>{
                     expect(article).toHaveProperty(property);
                 })
@@ -83,6 +84,21 @@ describe('Articles', ()=>{
             .then((response) => {
                 expect(response.body.msg).toBe("Not Found")
             });
+        })
+        describe('FEATURE - comment_count', ()=>{
+            test('comment_count is always an integer value, representing the number of comments for a particular article', ()=>{
+                return request(app)
+                .get('/api/articles/1')
+                .expect(200)
+                .then((response)=>{
+                    const {comment_count} = response.body.article;
+                    const parsedCount = parseFloat(comment_count);
+                    const containsDecimal = /\./.test(comment_count);
+
+                    expect(containsDecimal).toBe(false);
+                    expect(isNaN(parsedCount)).toBe(false);
+                })
+            })
         })
     })
     describe('GET /api/articles', ()=>{
