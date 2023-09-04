@@ -58,7 +58,6 @@ describe('Articles', ()=>{
             .expect(200)
             .then((response)=>{
                 const {article} = response.body;
-                console.log(article)
                 const expectedProperties = ['article_id', 'title', 'topic', 'author', 'body', 'created_at', 'votes', 'article_img_url', 'comment_count'];
 
                 expect(Object.keys(article)).toHaveLength(9)
