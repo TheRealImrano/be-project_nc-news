@@ -157,15 +157,16 @@ describe('Articles', ()=>{
                 })
             })
             test('sort_by: sorts the response by a specified column name, provided its valid', ()=>{
-                const query = 'article_id';
+                const query1 = 'article_id';
+                const query2 = 'comment_count';
 
                 return request(app)
-                .get(`/api/articles?sort_by=${query}`)
+                .get(`/api/articles?sort_by=${query2}`)
                 .expect(200)
                 .then((response)=>{
                     const {articles} = response.body;
 
-                    expect(articles).toBeSortedBy(query, {
+                    expect(articles).toBeSortedBy(query2, {
                         descending: true,
                     })
                 })

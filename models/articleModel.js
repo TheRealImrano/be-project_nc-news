@@ -37,7 +37,7 @@ exports.fetchAllArticles = (queries) => {
     let orderByClause = `ORDER BY articles.created_at DESC`;
 
     if (sort_by || order){
-        orderByClause = `ORDER BY articles.${sorting} ${orderSeq}`;
+        orderByClause = `ORDER BY ${sorting} ${orderSeq}`;
     }
 
     return db.query(`
@@ -49,7 +49,7 @@ exports.fetchAllArticles = (queries) => {
         articles.created_at,
         articles.votes,
         articles.article_img_url,
-        COUNT(comments.comment_id) AS comment_count
+        COUNT(comments.comment_id)::INTEGER AS comment_count
     FROM
         articles
     LEFT JOIN
@@ -146,6 +146,3 @@ exports.updateArticle = (id, request) => {
         return data.rows[0];
     })
 }
-
-// do a SELECT query to obtain current vote count, storing that value
-// update the value of votes by taking the sum of our obtained value and provided value
